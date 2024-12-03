@@ -41,5 +41,25 @@ namespace DrawPicture.Controllers
 
             return View(directories);
         }
+
+        public IActionResult TopicGallery(string topic)
+        {
+            if (string.IsNullOrEmpty(topic))
+            {
+                return RedirectToAction("Index"); 
+            }
+
+            // Đường dẫn folder chứa hình ảnh
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/topic", topic);
+
+            // Lấy danh sách ảnh từ folder
+            var images = Directory.Exists(folderPath)
+                ? Directory.GetFiles(folderPath, "*.jpg").Select(Path.GetFileName).ToList()
+                : new List<string>();
+
+            ViewBag.Topic = topic;
+            return View(images); // Truyền danh sách ảnh vào View
+        }
+
     }
 }

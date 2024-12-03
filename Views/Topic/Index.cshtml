@@ -75,7 +75,7 @@
                                 <div class="header-container">
                                     <h2>THƯ VIỆN CHỦ ĐỀ</h2>
                                     <div class="button-container">
-                                        <a href="https://www.example.com" class="round-btn left-btn">Bé tập tô</a>
+                                        <a href="#" class="round-btn left-btn" onclick="navigateActiveTopic()">Bé tập tô</a>
                                         <a href="/DrawingPicture/FreeDrawing" class="round-btn right-btn">Vẽ theo miêu tả</a>
                                     </div>
                                 </div>
@@ -113,5 +113,22 @@
     <script src="~/js/jquery.flexslider.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/templatemo_script.js"></script>
+    <script>
+        function navigateActiveTopic() {
+            // Tìm thẻ có class "flex-active-slide"
+            const activeSlides = document.querySelectorAll('.flex-active-slide');
+
+            activeSlides.forEach(slide => {
+                // Lấy nội dung từ thẻ <p> hoặc giá trị "alt" của ảnh
+                const topic = slide.querySelector('p')?.innerText ||
+                              slide.querySelector('img')?.alt;
+
+                if (topic) {
+                    // Điều hướng đến trang chủ đề
+                    window.location.href = `/Topic/TopicGallery?topic=${encodeURIComponent(topic)}`;
+                }
+            });
+        }
+    </script>
 </body>
 </html>

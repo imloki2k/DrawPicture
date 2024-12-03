@@ -8,5 +8,10 @@ namespace DrawPicture.Controllers
         {
             return View();
         }
+
+        public IActionResult ColorPicture()
+        {
+            return View();
+        }
     }
 }
