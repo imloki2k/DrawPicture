@@ -178,6 +178,8 @@
 
             <button id="clear-canvas">Xóa</button>
             <button id="change-image">Chọn hình khác</button>
+            <button id="save-image">Lưu Hình Ảnh</button>
+
         </div>
     </div>
 
@@ -287,6 +289,27 @@
                 // Điều hướng quay lại TopicGallery
                 window.location.href = "/Topic/TopicGallery";
             });
+    </script>
+    <script>
+            document.getElementById('save-image').addEventListener('click', () => {
+            const canvasData = canvas.toDataURL('image/jpg'); 
+            
+            fetch('/api/ImagesApi/save-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imageData: canvasData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Hình ảnh đã được lưu thành công');
+            })
+            .catch(error => {
+                console.error('Lỗi khi lưu hình ảnh:', error);
+                alert('Có lỗi xảy ra');
+            });
+        });
     </script>
 </body>
 
