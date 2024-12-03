@@ -4,7 +4,7 @@ namespace DrawPicture.Controllers
 {
     public class DrawingPictureController : Controller
     {
-        public IActionResult Index()
+        public IActionResult FreeDrawing()
         {
             return View();
         }
