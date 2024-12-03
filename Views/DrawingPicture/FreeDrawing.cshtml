@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8">
     <title>Các chủ đề</title>
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/templatemo_main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <link rel="stylesheet" href="~/css/style.css">
     <style>
         body {
             background-image: url('/images/background/background1.jpg');
@@ -33,6 +34,7 @@
             display: flex;
             justify-content: center;
             position: relative;
+            width: 100%;
         }
 
         #control-panel {
@@ -93,6 +95,52 @@
             color: white;
             font-size: 14px;
         }
+
+        /* Responsive CSS */
+        @@media (max-width: 768px) {
+            .canvas-wrapper
+
+        {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        }
+
+        #drawingCanvas {
+            width: 100%;
+            height: auto;
+        }
+
+        #control-panel {
+            flex-direction: column; /* Nút xếp dọc */
+            gap: 10px;
+        }
+
+            #control-panel button, #brush-type, #brush-size {
+                width: 100%; /* Chiếm toàn bộ chiều rộng */
+            }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .color-box
+
+        {
+            width: 15px;
+            height: 15px;
+        }
+
+        #control-panel {
+            padding: 10px;
+        }
+
+        }
     </style>
 </head>
 
@@ -143,12 +191,28 @@
             backgroundColor: 'white'
         });
 
-        // Thiết lập ban đầu
+        // Hàm resize canvas
+        function resizeCanvas() {
+            const containerWidth = document.querySelector('.canvas-wrapper').clientWidth;
+            const aspectRatio = 4 / 3; // Tỉ lệ 4:3
+            const newWidth = Math.min(containerWidth, 1000); // Giới hạn kích thước tối đa
+            const newHeight = newWidth / aspectRatio;
+
+            canvas.setWidth(newWidth);
+            canvas.setHeight(newHeight);
+        }
+
+        // Gọi resize khi tải trang
+        resizeCanvas();
+
+        // Lắng nghe thay đổi kích thước
+        window.addEventListener('resize', resizeCanvas);
+
+        // Các tính năng khác (bút, màu, xóa) vẫn giữ nguyên...
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
         canvas.freeDrawingBrush.color = 'red';
         canvas.freeDrawingBrush.width = 10;
 
-        // Chọn loại bút
         const brushTypeSelect = document.getElementById('brush-type');
         brushTypeSelect.addEventListener('change', (event) => {
             const brushType = event.target.value;
@@ -167,39 +231,33 @@
                     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
             }
 
-            // Giữ nguyên màu và kích thước khi đổi loại bút
             const color = document.querySelector('.color-box.active')?.getAttribute('data-color') || 'red';
             canvas.freeDrawingBrush.color = color;
             canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value, 10);
         });
 
-        // Chọn kích thước bút
         const brushSizeSelect = document.getElementById('brush-size');
         brushSizeSelect.addEventListener('change', (event) => {
             canvas.freeDrawingBrush.width = parseInt(event.target.value, 10);
         });
 
-        // Chọn màu
         const colorBoxes = document.querySelectorAll('.color-box');
         colorBoxes.forEach(box => {
             box.addEventListener('click', () => {
                 const color = box.getAttribute('data-color');
                 canvas.freeDrawingBrush.color = color;
 
-                // Đánh dấu màu được chọn
                 colorBoxes.forEach(box => box.classList.remove('active'));
                 box.classList.add('active');
             });
         });
 
-        // Bật/Tắt chế độ vẽ
         const toggleButton = document.getElementById('toggle-drawing');
         toggleButton.addEventListener('click', () => {
             canvas.isDrawingMode = !canvas.isDrawingMode;
             toggleButton.textContent = canvas.isDrawingMode ? 'Tắt chế độ vẽ' : 'Bật chế độ vẽ';
         });
 
-        // Xóa canvas
         const clearButton = document.getElementById('clear-canvas');
         clearButton.addEventListener('click', () => {
             canvas.clear();
